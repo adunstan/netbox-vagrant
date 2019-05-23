@@ -38,7 +38,12 @@ apt-get install supervisor -y > /dev/null
 
 printf "Step 8 of 19: Cloning NetBox repo latest stable release..."
 # git clone netbox master branch
-git clone -b master https://github.com/digitalocean/netbox.git /opt/netbox
+#do this before and then then link to it
+# git clone -b master https://github.com/digitalocean/netbox.git /opt/netbox
+mkdir -p /opt
+ln -s /vagrant/netbox /opt
+
+ls -l /opt
 
 # Install NetBox requirements
 printf "Step 9 of 19: Installing NetBox requirements..."
@@ -58,11 +63,11 @@ unset SECRET_KEY
 
 # Setup apache, gunicorn, & supervisord config using premade examples (need to change netbox-setup)
 printf "Step 11 of 19: Configuring nginx..."
-cp /vagrant/nginx-netbox.example /etc/nginx/sites-available/netbox
+cp /vagrant/config_files/nginx-netbox.example /etc/nginx/sites-available/netbox
 printf "Step 12 of 19: Configuring gunicorn..."
-cp /vagrant/gunicorn_config.example.py /opt/netbox/gunicorn_config.py
+cp /vagrant/config_files/gunicorn_config.example.py /opt/netbox/gunicorn_config.py
 printf "Step 13 of 19: Configuring supervisor..."
-cp /vagrant/supervisord-netbox.example.conf /etc/supervisor/conf.d/netbox.conf
+cp /vagrant/config_files/supervisord-netbox.example.conf /etc/supervisor/conf.d/netbox.conf
 
 # Apache Setup (enable the proxy and proxy_http modules, and reload Apache)
 printf "Step 14 of 19: Completing web service setup..."
